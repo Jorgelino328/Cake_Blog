@@ -3,6 +3,7 @@ services:
     postgres:
         image: postgres
         container_name: postgresdb
+        restart: always
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=senhadb
@@ -18,11 +19,11 @@ services:
         image: webdevops/php-apache:7.3
         container_name: cake-php
         volumes:
-            - .:/var/www/html
+            - ./app
         networks: 
             - cake-network
         ports:
-            - "8000:80"
+            - "8080:80"
         depends_on:
             - "postgres"
 networks: 
