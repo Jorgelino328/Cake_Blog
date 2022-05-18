@@ -1,25 +1,27 @@
 version: '3'
 services:
-    nginx:
-        image: nginx
-        container_name: nginx
-        ports:
-            - "80:80"
-        networks: 
-            - cake-network
-        depends_on: 
-            - "cake-php"
-
     postgres:
         image: postgres
+        container_name: postgresdb
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=senhadb
+        ports:
+            - "5432"
+        volumes:
+            - db-data:/var/lib/postgresql/data
         networks: 
             - cake-network
 
     cake-php:
-        image: webdevops/php-apache
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
         container_name: cake-php
+        volumes:
+            - .:/var/www/html
         ports:
-            - "3000"
+            - "8000:80"
         networks: 
             - cake-network
         depends_on:
@@ -27,3 +29,6 @@ services:
 networks: 
     cake-network:
         driver: bridge
+volumes:
+    db-data:
+        external: false
