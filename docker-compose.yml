@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
     postgres:
         image: postgres
@@ -6,29 +6,25 @@ services:
         environment:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=senhadb
-        ports:
-            - "5432"
         volumes:
-            - db-data:/var/lib/postgresql/data
+            - ./db-data:/var/lib/postgresql/data
         networks: 
             - cake-network
+        ports:
+            - "5432"
+
 
     cake-php:
-        build:
-            context: .
-            dockerfile: docker/Dockerfile
+        image: webdevops/php-apache:7.3
         container_name: cake-php
         volumes:
             - .:/var/www/html
-        ports:
-            - "8000:80"
         networks: 
             - cake-network
+        ports:
+            - "8000:80"
         depends_on:
             - "postgres"
 networks: 
     cake-network:
         driver: bridge
-volumes:
-    db-data:
-        external: false
