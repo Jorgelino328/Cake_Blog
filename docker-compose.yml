@@ -1,0 +1,29 @@
+version: '3'
+services:
+    nginx:
+        image: nginx
+        container_name: nginx
+        ports:
+            - "80:80"
+        networks: 
+            - cake-network
+        depends_on: 
+            - "cake-php"
+
+    postgres:
+        image: postgres
+        networks: 
+            - cake-network
+
+    cake-php:
+        image: webdevops/php-apache
+        container_name: cake-php
+        ports:
+            - "3000"
+        networks: 
+            - cake-network
+        depends_on:
+            - "postgres"
+networks: 
+    cake-network:
+        driver: bridge
